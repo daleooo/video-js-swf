@@ -17,7 +17,7 @@ package com.videojs.providers{
 
     public class HTTPVideoProvider extends EventDispatcher implements IProvider{
 
-        private static var FLV_HEADER = new ByteArray();
+        private static var FLV_HEADER:ByteArray = new ByteArray();
         // file marker
         FLV_HEADER.writeByte(0x46); // 'F'
         FLV_HEADER.writeByte(0x4c); // 'L'
@@ -324,7 +324,7 @@ package com.videojs.providers{
         }
 
         public function pause():void{
-            var alreadyPaused = _isPaused;
+            var alreadyPaused:Boolean = _isPaused;
             _ns.pause();
             if(_playbackStarted && !alreadyPaused){
                 _model.broadcastEventExternally(ExternalEventName.ON_PAUSE);
@@ -438,6 +438,25 @@ package com.videojs.providers{
             {
                 _throughputTimer.reset();
             }
+        }
+
+        // This provider supports a stream with single level.
+        public function get numberOfLevels():int{
+            return 1;
+        }
+        public function get level():int{
+            return 0;
+        }
+        public function set level(pLevel:int):void
+        {
+            if (pLevel != 0)
+            {
+                throw "Wrong level.";
+            }
+        }
+        public function get autoLevelEnabled():Boolean
+        {
+            return false;
         }
 
         private function initNetConnection():void{
@@ -572,7 +591,7 @@ package com.videojs.providers{
                         _isSeeking = false;
                         _model.broadcastEventExternally(ExternalEventName.ON_SEEK_COMPLETE);
                     }
-
+                    _model.broadcastEventExternally(ExternalEventName.ON_CAN_PLAY);
                     _pausedSeekValue = -1;
                     _playbackStarted = true;
                     if(_pausePending){

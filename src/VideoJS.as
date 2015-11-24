@@ -103,6 +103,10 @@ package{
         }
 
         private function finish():void{
+            
+            // Pass the whole parameters to the model so that any provider may
+            // refer it.
+            _app.model.parameters = loaderInfo.parameters;
 
             if(loaderInfo.parameters.mode != undefined){
                 _app.model.mode = loaderInfo.parameters.mode;
@@ -290,6 +294,15 @@ package{
                 case "rtmpStream":
                     return _app.model.rtmpStream;
                     break;
+                case "numberOfLevels":
+                    return _app.model.numberOfLevels;
+                    break;
+                case "level":
+                    return _app.model.level;
+                    break;
+                case "autoLevelEnabled":
+                    return _app.model.autoLevelEnabled;
+                    break;
             }
             return null;
         }
@@ -345,6 +358,9 @@ package{
                     break;
                 case "rtmpStream":
                     _app.model.rtmpStream = String(pValue);
+                    break;
+                case "level":
+                    _app.model.level = int(pValue);
                     break;
                 default:
                     _app.model.broadcastErrorEventExternally(ExternalErrorEventName.PROPERTY_NOT_FOUND, pPropertyName);
